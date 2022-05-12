@@ -26,47 +26,47 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	const errorFormat = "cannot calculate sum: %w"
-	const operators = "-+"
-
-	if strings.TrimSpace(input) == "" {
-		return "", fmt.Errorf(errorFormat, errorEmptyInput)
+	if input == "" {
+		return "", makeError(errorEmptyInput)
 	}
 
-	operatorIndex := strings.LastIndexAny(input, operators)
-	if operatorIndex == -1 || strings.ContainsAny(input[1:operatorIndex-1], operators) {
-		return "", fmt.Errorf(errorFormat, errorNotTwoOperands)
-	}
+	stringA := ""
+	var operator rune
+	for i, s := range input[1:] {
+		if s != '-' && s != '+' {
+			continue
+		}
 
-	stringA := strings.TrimSpace(input[:operatorIndex])
-	if stringA == "" {
-		return "", fmt.Errorf(errorFormat, errorNotTwoOperands)
+		if stringA != "" {
+			return "", makeError(errorNotTwoOperands)
+		}
+
+		stringA = strings.TrimSpace(input[:i+1])
+		operator = s
 	}
 
 	a, err := strconv.Atoi(stringA)
 	if err != nil {
-		return "", fmt.Errorf(errorFormat, err)
+		return "", makeError(err)
 	}
 
-	stringB := strings.TrimSpace(input[operatorIndex+1:])
-	if stringB == "" {
-		return "", fmt.Errorf(errorFormat, errorNotTwoOperands)
-	}
-
+	stringB := strings.TrimSpace(input[len(stringA)+1:])
 	b, err := strconv.Atoi(stringB)
 	if err != nil {
-		return "", fmt.Errorf(errorFormat, err)
+		return "", makeError(err)
 	}
-
-	operator := string(input[operatorIndex])
 
 	var result int
 	switch operator {
-	case "-":
+	case '-':
 		result = a - b
-	case "+":
+	case '+':
 		result = a + b
 	}
 
 	return strconv.Itoa(result), nil
+}
+
+func makeError(err error) error {
+	return fmt.Errorf("cannot calculate sum: %w", err)
 }
