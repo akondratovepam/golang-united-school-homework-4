@@ -40,9 +40,9 @@ func StringSum(input string) (output string, err error) {
 		return "", fmt.Errorf("cannot calculate sum: %w", errorNotTwoOperands)
 	}
 
-	a, err := strconv.ParseInt(stringA, 10, 64)
+	a, err := strconv.Atoi(stringA)
 	if err != nil {
-		return "", fmt.Errorf("cannot calculate sum: %w", errorNotTwoOperands)
+		return "", fmt.Errorf("cannot calculate sum: %w", err)
 	}
 
 	stringB := input[operatorIndex+1:]
@@ -50,14 +50,14 @@ func StringSum(input string) (output string, err error) {
 		return "", fmt.Errorf("cannot calculate sum: %w", errorNotTwoOperands)
 	}
 
-	b, err := strconv.ParseInt(stringB, 10, 64)
+	b, err := strconv.Atoi(stringB)
 	if err != nil {
-		return "", fmt.Errorf("cannot calculate sum: %w", errorNotTwoOperands)
+		return "", fmt.Errorf("cannot calculate sum: %w", err)
 	}
 
 	operator := string(input[operatorIndex])
 
-	var result int64
+	var result int
 	switch operator {
 	case "-":
 		result = a - b
@@ -65,5 +65,5 @@ func StringSum(input string) (output string, err error) {
 		result = a + b
 	}
 
-	return strconv.FormatInt(result, 10), nil
+	return strconv.Itoa(result), nil
 }
