@@ -2,6 +2,9 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
+	"strings"
 )
 
 //use these errors as appropriate, wrapping them with fmt.Errorf function
@@ -23,5 +26,44 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	return "", nil
+	if strings.TrimSpace(input) == "" {
+		return "", fmt.Errorf("cannot calculate sum: %w", errorEmptyInput)
+	}
+
+	operatorIndex := strings.LastIndexAny(input, "-+")
+	if operatorIndex == -1 {
+		return "", fmt.Errorf("cannot calculate sum: %w", errorNotTwoOperands)
+	}
+
+	stringA := input[:operatorIndex]
+	if stringA == "" {
+		return "", fmt.Errorf("cannot calculate sum: %w", errorNotTwoOperands)
+	}
+
+	a, err := strconv.ParseInt(stringA, 10, 64)
+	if err != nil {
+		return "", fmt.Errorf("cannot calculate sum: %w", errorNotTwoOperands)
+	}
+
+	stringB := input[operatorIndex+1:]
+	if stringB == "" {
+		return "", fmt.Errorf("cannot calculate sum: %w", errorNotTwoOperands)
+	}
+
+	b, err := strconv.ParseInt(stringB, 10, 64)
+	if err != nil {
+		return "", fmt.Errorf("cannot calculate sum: %w", errorNotTwoOperands)
+	}
+
+	operator := string(input[operatorIndex])
+
+	var result int64
+	switch operator {
+	case "-":
+		result = a - b
+	case "+":
+		result = a + b
+	}
+
+	return strconv.FormatInt(result, 10), nil
 }
