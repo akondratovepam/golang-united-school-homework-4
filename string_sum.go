@@ -27,13 +27,14 @@ var (
 
 func StringSum(input string) (output string, err error) {
 	const errorFormat = "cannot calculate sum: %w"
+	const operators = "-+"
 
 	if strings.TrimSpace(input) == "" {
 		return "", fmt.Errorf(errorFormat, errorEmptyInput)
 	}
 
-	operatorIndex := strings.LastIndexAny(input, "-+")
-	if operatorIndex == -1 {
+	operatorIndex := strings.LastIndexAny(input, operators)
+	if operatorIndex == -1 || strings.IndexAny(input[1:operatorIndex], operators) != -1 {
 		return "", fmt.Errorf(errorFormat, errorNotTwoOperands)
 	}
 
