@@ -26,33 +26,35 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
+	const errorFormat = "cannot calculate sum: %w"
+
 	if strings.TrimSpace(input) == "" {
-		return "", fmt.Errorf("cannot calculate sum: %w", errorEmptyInput)
+		return "", fmt.Errorf(errorFormat, errorEmptyInput)
 	}
 
 	operatorIndex := strings.LastIndexAny(input, "-+")
 	if operatorIndex == -1 {
-		return "", fmt.Errorf("cannot calculate sum: %w", errorNotTwoOperands)
+		return "", fmt.Errorf(errorFormat, errorNotTwoOperands)
 	}
 
 	stringA := input[:operatorIndex]
 	if stringA == "" {
-		return "", fmt.Errorf("cannot calculate sum: %w", errorNotTwoOperands)
+		return "", fmt.Errorf(errorFormat, errorNotTwoOperands)
 	}
 
 	a, err := strconv.Atoi(stringA)
 	if err != nil {
-		return "", fmt.Errorf("cannot calculate sum: %w", err)
+		return "", fmt.Errorf(errorFormat, err)
 	}
 
 	stringB := input[operatorIndex+1:]
 	if stringB == "" {
-		return "", fmt.Errorf("cannot calculate sum: %w", errorNotTwoOperands)
+		return "", fmt.Errorf(errorFormat, errorNotTwoOperands)
 	}
 
 	b, err := strconv.Atoi(stringB)
 	if err != nil {
-		return "", fmt.Errorf("cannot calculate sum: %w", err)
+		return "", fmt.Errorf(errorFormat, err)
 	}
 
 	operator := string(input[operatorIndex])
