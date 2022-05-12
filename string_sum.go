@@ -37,7 +37,7 @@ func StringSum(input string) (output string, err error) {
 		return "", fmt.Errorf(errorFormat, errorNotTwoOperands)
 	}
 
-	stringA := input[:operatorIndex]
+	stringA := strings.TrimSpace(input[:operatorIndex])
 	if stringA == "" {
 		return "", fmt.Errorf(errorFormat, errorNotTwoOperands)
 	}
@@ -47,7 +47,7 @@ func StringSum(input string) (output string, err error) {
 		return "", fmt.Errorf(errorFormat, err)
 	}
 
-	stringB := input[operatorIndex+1:]
+	stringB := strings.TrimSpace(input[operatorIndex+1:])
 	if stringB == "" {
 		return "", fmt.Errorf(errorFormat, errorNotTwoOperands)
 	}
