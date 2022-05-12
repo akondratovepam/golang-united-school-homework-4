@@ -34,7 +34,7 @@ func StringSum(input string) (output string, err error) {
 	}
 
 	operatorIndex := strings.LastIndexAny(input, operators)
-	if operatorIndex == -1 || strings.IndexAny(input[1:operatorIndex], operators) != -1 {
+	if operatorIndex == -1 || strings.ContainsAny(input[1:operatorIndex], operators) {
 		return "", fmt.Errorf(errorFormat, errorNotTwoOperands)
 	}
 
