@@ -30,19 +30,33 @@ func StringSum(input string) (output string, err error) {
 		return "", makeError(errorEmptyInput)
 	}
 
-	stringA := ""
+	// clean whitespaces
+	input = strings.ReplaceAll(input, " ", "")
+
+	var stringA, stringB string
 	var operator rune
-	for i, s := range input[1:] {
-		if s != '-' && s != '+' {
-			continue
-		}
+	for i, s := range input {
+		switch s {
+		case '-':
+			fallthrough
+		case '+':
+			if i == 0 {
+				// optional first operator is allowed
+				continue
+			}
 
-		if stringA != "" {
-			return "", makeError(errorNotTwoOperands)
-		}
+			if stringA != "" {
+				return "", makeError(errorNotTwoOperands)
+			}
 
-		stringA = strings.TrimSpace(input[:i+1])
-		operator = s
+			operator = s
+			stringA = input[:i]
+			stringB = input[i+1:]
+		}
+	}
+
+	if stringA == "" {
+		return "", makeError(errorNotTwoOperands)
 	}
 
 	a, err := strconv.Atoi(stringA)
@@ -50,7 +64,6 @@ func StringSum(input string) (output string, err error) {
 		return "", makeError(err)
 	}
 
-	stringB := strings.TrimSpace(input[len(stringA)+1:])
 	b, err := strconv.Atoi(stringB)
 	if err != nil {
 		return "", makeError(err)
